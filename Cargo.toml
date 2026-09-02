@@ -1,0 +1,95 @@
+[workspace]
+resolver = "2"
+members = [
+    ".",
+    "examples/oauth-boot-host",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Sean O'Rourke"]
+repository = "https://github.com/unified-field-dev/uf-oauth-boot"
+homepage = "https://github.com/unified-field-dev/uf-oauth-boot"
+documentation = "https://github.com/unified-field-dev/uf-oauth-boot"
+
+[workspace.lints.rust]
+missing_docs = "deny"
+
+[workspace.lints.rustdoc]
+broken_intra_doc_links = "deny"
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+dbg_macro = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "deny"
+missing_panics_doc = "deny"
+return_self_not_must_use = "allow"
+
+[workspace.dependencies]
+anyhow = "1"
+axum = { version = "0.8.4", default-features = false, features = ["tokio", "http1", "json"] }
+lepton-auth = { git = "https://github.com/unified-field-dev/lepton", branch = "main", default-features = false }
+valence = { package = "uf-valence", git = "https://github.com/unified-field-dev/valence", branch = "main", default-features = false, features = ["mem", "sqlite"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+tracing = "0.1"
+gauge = { git = "https://github.com/unified-field-dev/gauge", branch = "main", default-features = false }
+lepton = { git = "https://github.com/unified-field-dev/lepton", branch = "main", default-features = false }
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+neutrino = { git = "https://github.com/unified-field-dev/neutrino", branch = "main", default-features = false }
+serde_json = "1.0"
+
+[package]
+name = "uf-oauth-boot"
+version = "0.1.0"
+edition = "2021"
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Resolve Lepton OAuthClientConfig from Neutrino (env seed + sealed get)"
+publish = false
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+lepton-auth = { workspace = true, default-features = false, features = ["ssr"] }
+neutrino = { workspace = true, default-features = false, features = ["ssr"] }
+tracing = { workspace = true }
+valence = { workspace = true }
+
+[dev-dependencies]
+chrono = { workspace = true }
+gauge = { workspace = true, default-features = false, features = ["ssr"] }
+lepton = { workspace = true, default-features = false, features = ["ssr"] }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["std", "registry"] }
+valence = { workspace = true }
+
+# Kits may still declare Valence/Chronon via crates.io; unify onto uf-dev git.
+[patch.crates-io]
+uf-valence = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-core = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-codegen = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-macros = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-telemetry = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-schema-dsl = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-backend-mem = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-backend-sqlite = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+uf-valence-backend-sql = { git = "https://github.com/unified-field-dev/valence", branch = "main" }
+chronon-core = { git = "https://github.com/unified-field-dev/chronon", branch = "main" }
+chronon-executor = { git = "https://github.com/unified-field-dev/chronon", branch = "main" }
+chronon-scheduler = { git = "https://github.com/unified-field-dev/chronon", branch = "main" }
+chronon-telemetry = { git = "https://github.com/unified-field-dev/chronon", branch = "main" }

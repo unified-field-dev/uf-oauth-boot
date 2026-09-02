@@ -1,0 +1,23 @@
+[package]
+name = "oauth-boot-host"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "MIT"
+description = "Teaching host: Neutrino resolve → LeptonAuthServicesBuilder::oauth inventory contract"
+
+[lints]
+workspace = true
+
+[dependencies]
+axum = { workspace = true, default-features = false, features = ["tokio", "http1", "json"] }
+chrono = { workspace = true }
+gauge = { workspace = true, default-features = false, features = ["ssr"] }
+http-body-util = "0.1"
+lepton = { workspace = true, default-features = false, features = ["ssr"] }
+neutrino = { workspace = true, default-features = false, features = ["ssr"] }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tower = { version = "0.5", features = ["util"] }
+uf-oauth-boot = { path = "../.." }
+valence = { workspace = true }
