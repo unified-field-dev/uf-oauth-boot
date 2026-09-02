@@ -1,0 +1,79 @@
+# PR / merge gate aligned with docs/VERIFICATION.md (uf-oauth-boot + oauth-boot-host).
+# Standalone checkout — UF deps resolve via git branch = main on unified-field-dev.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_BUILD_JOBS: 1
+  CARGO_TARGET_DIR: target-uf-oauth-boot
+  RUST_BACKTRACE: 1
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: dtolnay/rust-toolchain@2c7215f132e9ebf062739d9130488b56d53c060c # master (pin)
+        with:
+          toolchain: nightly-2026-08-07
+          components: rustfmt
+      - name: cargo fmt --check
+        run: cargo fmt -p uf-oauth-boot -p oauth-boot-host -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: ""
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: dtolnay/rust-toolchain@2c7215f132e9ebf062739d9130488b56d53c060c # master (pin)
+        with:
+          toolchain: nightly-2026-08-07
+          components: clippy
+      - name: cargo clippy (uf-oauth-boot)
+        run: cargo clippy -p uf-oauth-boot --all-targets -- -D warnings
+      - name: cargo clippy (oauth-boot-host)
+        run: cargo clippy -p oauth-boot-host --all-targets -- -D warnings
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: dtolnay/rust-toolchain@2c7215f132e9ebf062739d9130488b56d53c060c # master (pin)
+        with:
+          toolchain: nightly-2026-08-07
+      - name: cargo test (uf-oauth-boot)
+        run: cargo test -p uf-oauth-boot
+      - name: cargo check + run (oauth-boot-host)
+        run: |
+          set -euo pipefail
+          cargo check -p oauth-boot-host
+          cargo run -p oauth-boot-host | tee /tmp/oauth-boot-host.out
+          grep -F 'oauth_boot_host: OK — mock + seed resolve + /auth/oauth/boot' \
+            /tmp/oauth-boot-host.out
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: dtolnay/rust-toolchain@2c7215f132e9ebf062739d9130488b56d53c060c # master (pin)
+        with:
+          toolchain: nightly-2026-08-07
+      - name: cargo doc (uf-oauth-boot, deny broken intra-doc links)
+        env:
+          RUSTDOCFLAGS: "-D rustdoc::broken-intra-doc-links"
+        run: cargo doc -p uf-oauth-boot --no-deps
