@@ -243,7 +243,7 @@ async fn mock_without_secrets_skips_store() {
     unsafe {
         std::env::set_var("NEUTRINO_MASTER_KEY", test_master_key_hex());
     }
-    let listed = list_secrets(store.valence.as_ref())
+    let listed = list_secrets(store.valence.as_ref(), None)
         .await
         .expect("list_secrets");
     assert!(
@@ -320,7 +320,7 @@ async fn seeds_google_secret_from_env_and_returns_config_happy() {
     assert!(cfg.github_client_secret.is_none());
     assert!(!cfg.use_mock_provider);
 
-    let listed = list_secrets(store.valence.as_ref())
+    let listed = list_secrets(store.valence.as_ref(), None)
         .await
         .expect("list_secrets");
     assert!(
@@ -354,7 +354,7 @@ async fn seeds_github_secret_from_env_and_returns_config_happy() {
     assert!(cfg.google_client_id.is_none());
     assert!(cfg.google_client_secret.is_none());
 
-    let listed = list_secrets(store.valence.as_ref())
+    let listed = list_secrets(store.valence.as_ref(), None)
         .await
         .expect("list_secrets");
     assert!(
@@ -411,7 +411,7 @@ async fn seed_from_env_false_ignores_env_secret_returns_none_sad() {
         "seed_from_env=false must not pull env secret into config"
     );
 
-    let listed = list_secrets(store.valence.as_ref())
+    let listed = list_secrets(store.valence.as_ref(), None)
         .await
         .expect("list_secrets");
     assert!(
@@ -511,7 +511,7 @@ async fn seed_from_env_does_not_rotate_existing_vault_secret_deny() {
         "existing sealed row must win over seed_from_env plaintext"
     );
 
-    let listed = list_secrets(store.valence.as_ref())
+    let listed = list_secrets(store.valence.as_ref(), None)
         .await
         .expect("list_secrets");
     let row = listed
@@ -926,7 +926,7 @@ async fn mock_with_client_secret_env_takes_vault_path_happy() {
     assert!(cfg.use_mock_provider);
     assert_eq!(cfg.google_client_secret.as_deref(), Some(secret));
 
-    let listed = list_secrets(store.valence.as_ref())
+    let listed = list_secrets(store.valence.as_ref(), None)
         .await
         .expect("list_secrets");
     assert!(
