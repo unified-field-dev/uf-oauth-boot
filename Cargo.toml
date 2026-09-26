@@ -93,7 +93,3 @@ chronon-core = { git = "https://github.com/unified-field-dev/chronon", branch = 
 chronon-executor = { git = "https://github.com/unified-field-dev/chronon", branch = "main" }
 chronon-scheduler = { git = "https://github.com/unified-field-dev/chronon", branch = "main" }
 chronon-telemetry = { git = "https://github.com/unified-field-dev/chronon", branch = "main" }
-
-# Until list_secrets(..., Option) lands on uf-dev neutrino.
-[patch."https://github.com/unified-field-dev/neutrino"]
-neutrino = { git = "https://github.com/deathbreakfast/neutrino", branch = "main" }

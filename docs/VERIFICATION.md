@@ -10,7 +10,7 @@ oneshot (`oauth-boot-host`), not a hydrate UI.
 
 | Layer | What it covers | Where it runs |
 |-------|----------------|---------------|
-| **This CI** | fmt, clippy `-D warnings`, lib + integ tests (`resolve_oauth_config`, surface contracts), teaching-host check/run + OK-line assert, rustdoc link deny | `.github/workflows/ci.yml` on `deathbreakfast/uf-oauth-boot` (PR + `main`) |
+| **This CI** | fmt, clippy `-D warnings`, lib + integ tests (`resolve_oauth_config`, surface contracts), teaching-host check/run + OK-line assert, rustdoc link deny, cargo-deny, cargo-audit | `.github/workflows/ci.yml` on PR + `main` |
 | **Teaching host** | Mock + env seed resolve, session-gated `/auth/oauth/boot` oneshot, inventory JSON (no secret echo) | CI `test` job + local `cargo run -p oauth-boot-host` |
 | **Out of this crate** | Live Google/GitHub OAuth, hydrate UI, Playwright / lepton-e2e, AWS campaign | L5 product hosts (`unified-field-site`, embedded, remote-fleet) |
 
@@ -25,22 +25,10 @@ export CARGO_BUILD_JOBS=1
 export CARGO_TARGET_DIR=target-uf-oauth-boot
 ```
 
-## CI sibling clones (required for clippy / test / docs)
+## Dependencies
 
-Path patches expect a Unified Field monorepo tree. Jobs clone deathbreakfast
-siblings via [`.github/scripts/clone-uf-siblings.sh`](../.github/scripts/clone-uf-siblings.sh).
-
-Private forks (`lepton`, `gauge`, `neutrino`, `unified-field-product`,
-`lepton-uf-app`, `record-history`, …) need a PAT. Set repo secret **`UF_CI_CLONE_TOKEN`**
-(Contents: Read on those repos):
-
-```bash
-gh secret set UF_CI_CLONE_TOKEN --repo deathbreakfast/uf-oauth-boot
-```
-
-Without that secret, jobs fail at clone with exit 128 (`could not
-read Username`). `Cargo.toml` path-patches private `record-history` so Cargo
-does not need `unified-field-dev` git credentials for that dep.
+UF crates resolve via `git` + `branch = "main"` on `unified-field-dev`. CI
+does not clone sibling checkouts; lockfile tips must match uf-dev `main`.
 
 ## Rustdoc policy
 
@@ -81,6 +69,8 @@ cargo check -p oauth-boot-host
 cargo run -p oauth-boot-host | tee /tmp/oauth-boot-host.out
 grep -F 'oauth_boot_host: OK — mock + seed resolve + /auth/oauth/boot' /tmp/oauth-boot-host.out
 RUSTDOCFLAGS="-D rustdoc::broken-intra-doc-links" cargo doc -p uf-oauth-boot --no-deps
+cargo deny check
+cargo audit
 ```
 
 Named integ suite: `tests/resolve_oauth_config.rs` (unconfigured / mock+OIDC /
@@ -88,6 +78,6 @@ seed / vault-load / seed=false / wrong-kind / InvalidUtf8 / Get / List /
 latest-row / Debug redaction / store-err leak / tracing outcomes).
 Host sync: `workspace_members` / `product_surface` (included in `cargo test -p uf-oauth-boot`).
 
-No `deny.toml` in this repo — `cargo deny` is not part of the gate. Live OAuth
-against real providers stays on L5 hosts. Playwright is not in this gate: this
-crate has no operator UI.
+`deny.toml` / `audit.toml` gate advisories and license policy (`deny` + `audit`
+CI jobs). Live OAuth against real providers stays on L5 hosts. Playwright is
+not in this gate: this crate has no operator UI.
