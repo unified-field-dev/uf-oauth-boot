@@ -9,7 +9,7 @@ use neutrino::create_initial_neutrino_groups;
 use neutrino::list_secrets;
 use neutrino::secret_store::{PutSecretRequest, SecretStore};
 use neutrino::vault::store_from_valence;
-use neutrino::ValenceSealedStore;
+use neutrino::{clear_master_key_cache, ValenceSealedStore};
 use tracing::field::{Field, Visit};
 use tracing_subscriber::layer::{Context, Layer, SubscriberExt};
 use tracing_subscriber::Registry;
@@ -94,6 +94,7 @@ fn prepare_store_env() {
             std::env::set_var("VALENCE_OWNERSHIP_UNIFIED_FETCH", "0");
         }
     }
+    clear_master_key_cache();
 }
 
 async fn test_valence() -> Valence {
@@ -227,6 +228,7 @@ async fn mock_without_secrets_skips_store() {
     unsafe {
         std::env::remove_var("NEUTRINO_MASTER_KEY");
     }
+    clear_master_key_cache();
     let cfg = resolve_oauth_config_from_neutrino(&store, "http://example.test", true)
         .await
         .expect("mock resolve must skip Neutrino I/O even without master key")
@@ -282,6 +284,7 @@ async fn store_failure_is_err_without_secret_leak() {
     unsafe {
         std::env::remove_var("NEUTRINO_MASTER_KEY");
     }
+    clear_master_key_cache();
     let err = resolve_oauth_config_from_neutrino(&store, "http://127.0.0.1:3000", true)
         .await
         .expect_err("expected store failure");
@@ -684,6 +687,7 @@ async fn get_failure_is_err_without_secret_leak_sad() {
     unsafe {
         std::env::remove_var("NEUTRINO_MASTER_KEY");
     }
+    clear_master_key_cache();
 
     let err = resolve_oauth_config_from_neutrino(&store, "http://127.0.0.1:3000", false)
         .await

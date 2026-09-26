@@ -42,8 +42,6 @@ highlight = "all"
 unknown-registry = "deny"
 unknown-git = "deny"
 allow-git = [
-    "https://github.com/deathbreakfast/gauge",
-    "https://github.com/deathbreakfast/neutrino",
     "https://github.com/unified-field-dev/Spectra",
     "https://github.com/unified-field-dev/chronon",
     "https://github.com/unified-field-dev/chronon-coordinator",
@@ -52,6 +50,8 @@ allow-git = [
     "https://github.com/unified-field-dev/gauge",
     "https://github.com/unified-field-dev/higgs",
     "https://github.com/unified-field-dev/lepton",
+    "https://github.com/unified-field-dev/meson",
+    "https://github.com/unified-field-dev/neutrino",
     "https://github.com/unified-field-dev/photon",
     "https://github.com/unified-field-dev/photon-leptos",
     "https://github.com/unified-field-dev/quark",
