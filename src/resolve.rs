@@ -278,7 +278,6 @@ mod tests {
             kind: kind.to_string(),
             current_version: version,
             created_at: Utc.timestamp_opt(created_secs, 0).unwrap(),
-            owner_subject_json: "{}".to_string(),
         }
     }
 
