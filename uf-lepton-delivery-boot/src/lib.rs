@@ -146,6 +146,9 @@ impl DeliveryBoot {
     }
 
     /// Stop the refresher and wait for it to finish.
+    ///
+    /// Dropping the handle without calling this leaves the refresher running for
+    /// the life of the process, which is what most hosts want.
     pub async fn shutdown(self) {
         let _ = self.stop.send(true);
         let _ = self.task.await;

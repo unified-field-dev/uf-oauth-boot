@@ -252,13 +252,18 @@ pub fn spawn(
     const MAX_BACKOFF: Duration = Duration::from_secs(60);
     tokio::spawn(async move {
         let mut wait = interval;
+        // Dropping the handle without calling `shutdown` leaves the loop running for
+        // the life of the process, so a host that only keeps the services is safe.
+        let mut watching_shutdown = true;
         loop {
             tokio::select! {
                 () = tokio::time::sleep(jitter(wait)) => {}
                 () = shared.notify.notified() => {}
-                changed = shutdown.changed() => {
-                    if changed.is_err() || *shutdown.borrow() {
-                        break;
+                changed = shutdown.changed(), if watching_shutdown => {
+                    match changed {
+                        Ok(()) if *shutdown.borrow() => break,
+                        Ok(()) => {}
+                        Err(_) => watching_shutdown = false,
                     }
                 }
             }
