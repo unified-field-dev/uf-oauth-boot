@@ -1,0 +1,42 @@
+[package]
+name = "uf-lepton-delivery-boot"
+version = "0.1.0"
+edition = "2021"
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Lepton email, SMS, OAuth and TOTP-seal settings resolved from Neutrino, with live swap"
+publish = false
+
+[lints]
+workspace = true
+
+[dependencies]
+async-trait = { workspace = true }
+chrono = { workspace = true, features = ["serde"] }
+gauge = { workspace = true, default-features = false, features = ["ssr"] }
+getrandom = { workspace = true }
+lepton-auth = { workspace = true, default-features = false, features = ["ssr", "totp", "email", "phone"] }
+lepton-host-adapter = { workspace = true, default-features = false }
+lepton-identity = { package = "lepton", git = "https://github.com/unified-field-dev/lepton", branch = "main", default-features = false, features = ["ssr"] }
+lepton-smtp = { workspace = true, features = ["twilio"] }
+lepton-sms = { workspace = true, features = ["twilio"] }
+neutrino = { workspace = true, default-features = false, features = ["ssr"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["sync", "time"] }
+tracing = { workspace = true }
+uf-oauth-boot = { path = ".." }
+valence = { workspace = true }
+
+[build-dependencies]
+valence-codegen = { workspace = true }
+
+[dev-dependencies]
+base64 = "0.22"
+chrono = { workspace = true }
+wiremock = "0.6"
+tokio = { workspace = true, features = ["sync", "time", "rt-multi-thread", "macros"] }

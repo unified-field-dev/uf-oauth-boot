@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     ".",
     "examples/oauth-boot-host",
+    "uf-lepton-delivery-boot",
 ]
 
 [workspace.package]
@@ -46,6 +47,14 @@ lepton = { git = "https://github.com/unified-field-dev/lepton", branch = "main",
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
 neutrino = { git = "https://github.com/unified-field-dev/neutrino", branch = "main", default-features = false }
 serde_json = "1.0"
+async-trait = "0.1"
+serde = { version = "1", features = ["derive"] }
+thiserror = "1"
+getrandom = "0.2"
+lepton-host-adapter = { git = "https://github.com/unified-field-dev/lepton", branch = "main", default-features = false }
+lepton-smtp = { git = "https://github.com/unified-field-dev/lepton", branch = "main", default-features = false }
+lepton-sms = { git = "https://github.com/unified-field-dev/lepton", branch = "main", default-features = false }
+valence-codegen = { package = "uf-valence-codegen", git = "https://github.com/unified-field-dev/valence", branch = "main" }
 
 [package]
 name = "uf-oauth-boot"
