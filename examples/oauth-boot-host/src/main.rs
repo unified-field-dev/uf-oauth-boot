@@ -21,8 +21,8 @@
 //! Stdout prints `oauth_boot_host: OK — mock + seed resolve + /auth/oauth/boot`.
 //!
 //! ## Look next
-//! Wire `LeptonAuthServicesBuilder::oauth(cfg)` in an L5 host (site / embedded /
-//! remote-fleet).
+//! Wire `LeptonAuthServicesBuilder::oauth(cfg)` in an L5 host (for example
+//! unified-field-embedded).
 
 #![allow(clippy::print_stdout, clippy::unwrap_used, clippy::expect_used)]
 #![allow(missing_docs)]

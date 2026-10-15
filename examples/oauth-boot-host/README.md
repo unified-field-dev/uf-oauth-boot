@@ -15,7 +15,7 @@ callback stays `/auth/oauth/callback`.
 | **When to use** | First smoke of Neutrino resolve → Lepton OAuth config in an embedded host |
 | **Command** | `CARGO_BUILD_JOBS=1 CARGO_TARGET_DIR=target-uf-oauth-boot cargo run -p oauth-boot-host` |
 | **Success** | Stdout: `oauth_boot_host: OK — mock + seed resolve + /auth/oauth/boot` |
-| **Look next** | Wire `.oauth(cfg)` in an L5 host (`unified-field-site` / embedded / remote-fleet) |
+| **Look next** | Wire `.oauth(cfg)` in an L5 host (for example `unified-field-embedded`) |
 
 **Open first:** [`src/main.rs`](src/main.rs)
 

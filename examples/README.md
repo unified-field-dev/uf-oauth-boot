@@ -22,7 +22,7 @@ cargo run -p oauth-boot-host
 
 **Success:** stdout prints `oauth_boot_host: OK — mock + seed resolve + /auth/oauth/boot`.
 
-**Next step:** Wire `.oauth(cfg)` in an L5 host (site / embedded / remote-fleet).
+**Next step:** Wire `.oauth(cfg)` in an L5 host (for example unified-field-embedded).
 Copy table + product mount `Cargo.toml`: [`oauth-boot-host/README.md`](oauth-boot-host/README.md).
 
 | Host | When to use | Command | Success | Look next |

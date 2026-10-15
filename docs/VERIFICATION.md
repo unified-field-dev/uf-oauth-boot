@@ -12,7 +12,7 @@ oneshot (`oauth-boot-host`), not a hydrate UI.
 |-------|----------------|---------------|
 | **This CI** | fmt, clippy `-D warnings`, lib + integ tests (`resolve_oauth_config`, surface contracts), teaching-host check/run + OK-line assert, rustdoc link deny, cargo-deny, cargo-audit | `.github/workflows/ci.yml` on PR + `main` |
 | **Teaching host** | Mock + env seed resolve, session-gated `/auth/oauth/boot` oneshot, inventory JSON (no secret echo) | CI `test` job + local `cargo run -p oauth-boot-host` |
-| **Out of this crate** | Live Google/GitHub OAuth, hydrate UI, Playwright / lepton-e2e, AWS campaign | L5 product hosts (`unified-field-site`, embedded, remote-fleet) |
+| **Out of this crate** | Live Google/GitHub OAuth, hydrate UI, Playwright / lepton-e2e, AWS campaign | L5 product hosts (for example `unified-field-embedded`) |
 
 Browser / provider E2E is intentionally **not** enabled here: there is no operator UI
 or product binary in this repo. Merging to `main` on this crate is gated by the
