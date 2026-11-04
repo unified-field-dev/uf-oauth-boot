@@ -244,6 +244,19 @@ async fn admin_saves_sendgrid_and_twilio_then_rotation_is_used_by_the_next_send(
     assert!(view.email.sendgrid_api_key.is_set);
     assert_eq!(view.email.driver, EmailDriverChoice::SendGrid);
     assert!(view.revision >= 3, "every save bumps the revision");
+
+    let row = uf_lepton_delivery_boot::LeptonDeliverySettings::get(
+        uf_lepton_delivery_boot::SETTINGS_ROW_ID,
+        &cell.system,
+        valence::use_!(r"**Test:** Fixture **Lepton delivery settings** load for `delivery_boot` so the suite can assert the stored row holds no secret plaintext. CI and developers running the suite only."),
+    )
+    .await
+    .expect("get")
+    .expect("row exists");
+    let raw = row.settings().to_string();
+    for secret in ["SG.first", "secret-one", "secret-two"] {
+        assert!(!raw.contains(secret), "settings row leaks {secret}: {raw}");
+    }
     cell.boot.shutdown().await;
 }
 
@@ -516,5 +529,27 @@ async fn delivery_admin_group_seed_is_idempotent() {
     uf_lepton_delivery_boot::ensure_delivery_admin_group(&cell.system)
         .await
         .expect("third seed");
+
+    let group = gauge::generated::PermissionGroup::get(
+        uf_lepton_delivery_boot::DELIVERY_ADMINS_GROUP_ID,
+        &cell.system,
+        valence::use_!(r"**Test:** Fixture **Permission Group** load for `delivery_boot` so the suite can assert the Super User member edge. CI and developers running the suite only."),
+    )
+    .await
+    .expect("get group")
+    .expect("admins group seeded");
+    let members = group
+        .get_members_record_ids(
+            &cell.system,
+            valence::use_!(r"**Test:** Fixture member-edge read for `delivery_boot` so the suite can assert the Super User member edge. CI and developers running the suite only."),
+        )
+        .await
+        .expect("members");
+    let super_user_edge = format!("permission_group:{}", gauge::super_user::SUPER_USER_GROUP_ID);
+    let edges = members
+        .iter()
+        .filter(|m| m.id() == super_user_edge)
+        .count();
+    assert_eq!(edges, 1, "one member edge to Super User, got {members:?}");
     cell.boot.shutdown().await;
 }
