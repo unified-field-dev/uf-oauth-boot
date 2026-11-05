@@ -1,9 +1,9 @@
 # uf-oauth-boot
 
-[![CI](https://github.com/deathbreakfast/uf-oauth-boot/actions/workflows/ci.yml/badge.svg)](https://github.com/deathbreakfast/uf-oauth-boot/actions/workflows/ci.yml)
+[![CI](https://github.com/unified-field-dev/uf-oauth-boot/actions/workflows/ci.yml/badge.svg)](https://github.com/unified-field-dev/uf-oauth-boot/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[GitHub](https://github.com/deathbreakfast/uf-oauth-boot) · `cargo doc -p uf-oauth-boot --open`
+[GitHub](https://github.com/unified-field-dev/uf-oauth-boot) · `cargo doc -p uf-oauth-boot --open`
 
 `uf-oauth-boot` resolves Google and GitHub OAuth client settings from Neutrino
 sealed secrets during application startup. It returns a redacted configuration
