@@ -14,7 +14,7 @@ use lepton_auth::delivery_settings::{
     SecretStatus, SmsCandidate, SmsMode, SmsSettingsView, TotpKeyView,
 };
 use neutrino::vault::store_from_valence_for_request;
-use neutrino::ValenceSealedStore;
+use neutrino::{RequestActor, ValenceSealedStore};
 use tokio::sync::Notify;
 use valence::Valence;
 
@@ -71,10 +71,8 @@ fn session_store(v: &Valence) -> Result<(ValenceSealedStore, String), DeliveryEr
         .map(str::to_string)
         .ok_or(DeliveryError::PermissionDenied)?;
     let label = format!("user:{}", user.strip_prefix("user:").unwrap_or(&user));
-    Ok((
-        store_from_valence_for_request(v.clone(), label.clone()),
-        label,
-    ))
+    let actor = RequestActor::from_valence(v).ok_or(DeliveryError::PermissionDenied)?;
+    Ok((store_from_valence_for_request(v.clone(), actor), label))
 }
 
 fn status(settings: &StoredSettings, spec: &SecretSpec) -> SecretStatus {
